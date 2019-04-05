@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
-
+const base64 = require('base-64');
+const queryStr = require('querystring');
 import axios from 'axios';
 
 if(Meteor.isServer){
@@ -17,6 +18,7 @@ if(Meteor.isServer){
 			        Accept: 'application/json',
 			        'Content-Type': 'application/json',
 			        Authorization: `Bearer ${Meteor.user().services.spotify.accessToken}}`
+
 			      }
 		    	})
 		    	.then(response => resolve(response.data) /*Return the requested data*/)
@@ -24,8 +26,13 @@ if(Meteor.isServer){
 		        //If access token expired, refresh it and try again        
 		        if (err.response.data.error.message === 'The access token expired') {
 		          console.log('Access token expired, refreshing access token...');
-		          
-		        	
+		          Spotify.refreshAccessToken()
+		            //Access token successfully refreshed
+		            .then(new_access_token => Spotify.getTopTracks(new_access_token, type, limit, time_range))
+		            //Successful retry
+		            .then(data => resolve(data))
+		            //Error refreshing or retrying
+		            .catch(err => { console.log('Error retrying to refresh access token'); reject(err); });
 		        }
 		        else {
 		          reject(err);
@@ -33,6 +40,42 @@ if(Meteor.isServer){
 				})
 		  })
 	}}),
+	Spotify.refreshAccessToken = (userId=undefined) => {
+	  return new Promise( (resolve, reject) => {
+	    let rToken = null;
+	    if(userId){
+	      //TODO Complete for custom userId
+	      reject(console.log('[ERROR] NOT IMPLEMENTED FOR CUSTOM ID'));      
+	    }
+	    else{
+	      rToken = Meteor.user().services.spotify.refreshToken;
+	    }
+	    const body = {
+	      grant_type: 'refresh_token',
+	      refresh_token: rToken
+	    };
+
+	    axios.post('https://accounts.spotify.com/api/token', queryStr.stringify(body), {
+	      headers:{
+	        'content-type': 'application/x-www-form-urlencoded',
+	        'Content-Type': 'application/x-www-form-urlencoded',
+	        Authorization: `Basic ${base64.encode(`6c4f45baec3f46ee85f42e07cf13836e:7002d1c4c3b449d79a4f484bb27ee893`)}`
+	      }
+	    }).then( response => {
+	      Meteor.users.update( { _id: Meteor.user()._id}, { $set : {
+	        'services.spotify.accessToken' : response.data.access_token,
+	        'services.spotify.scope' : response.data.scope,
+	        'services.spotify.expiresAt' : Date.now() + 1000*response.data.scope
+	      }});
+	      console.log('Access token successfully refreshed.');
+	      console.log(response.data.access_token)
+	      resolve(response.data.access_token);
+	    }).catch( err => {
+	      console.log('Error refreshing access token');      
+	      reject(err);      
+	    });
+	  });
+	},
 	Meteor.methods({
 		"search"(genres1){
 			//const genres1 = genres1;
@@ -55,8 +98,13 @@ if(Meteor.isServer){
 		        //If access token expired, refresh it and try again        
 		        if (err.response.data.error.message === 'The access token expired') {
 		          console.log('Access token expired, refreshing access token...');
-		          
-		        	
+		          Spotify.refreshAccessToken()
+		            //Access token successfully refreshed
+		            .then(new_access_token => Spotify.getTopTracks(new_access_token, type, limit, time_range))
+		            //Successful retry
+		            .then(data => resolve(data))
+		            //Error refreshing or retrying
+		            .catch(err => { console.log('Error retrying to refresh access token'); reject(err); });
 		        }
 		        else {
 		          reject(err);
