@@ -9,7 +9,8 @@ export default class Genre extends Component {
 	    this.state = {
 	    	tracks: [],
 	    	sortBylike: false,
-	    	sortByComments: false
+	    	sortByComments: false,
+	    	login: false
 	    }
   	}
 
@@ -77,23 +78,36 @@ export default class Genre extends Component {
 	comment(){
 
 	}
-
+	login(){
+		const pre = this.state.login;
+		this.setState({
+			login: !pre
+		})
+	}
   	render() {
 		const like = this.state.sortBylike;
 		const comment = this.state.sortByComments;
-
+		const log = this.state.login;
 		return(
 			<div>
 				<h1>{this.props.name}</h1>
 				
+					{
+						log 
+						
+						
+						?
+						
+						this.renderSong()
+						
+						:
 
-					
-					{this.renderSong()}
-
+						<div>please log in</div>
+					}
 
 				<button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>sortByName</button>
 				<button aria-label='Get started' className='btn' onClick={this.sortByComments.bind(this)}>sortByName2</button>
-				
+				<button aria-label='Get started' className='btn' onClick={this.login.bind(this)}>login</button>
 				<Search />
 			</div>
 
