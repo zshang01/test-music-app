@@ -17,7 +17,8 @@ class Login extends Component {
 			email: ""
 		};
 		this.send = this.send.bind(this);
-		this.showLastFive = this.showLastFive.bind(this);
+		
+		
 
 		
 	}
@@ -118,11 +119,10 @@ class Login extends Component {
 			toggle: !pre
 		})
 	}
-	showLastFive(){
-
-	}
+	
 
 	render() {
+		
 		return (
 			<div id="account">
 				<button aria-label='Get started' className='btn' onClick={this.toggleShow.bind(this)}>Account</button>
@@ -187,6 +187,7 @@ class Login extends Component {
 						}}
 					/>
 				</Grid.Row>
+
 			</div>
 		);
 	}

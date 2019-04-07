@@ -28,11 +28,14 @@ class LandingPage extends Component {
   			userLogIn: false,
   			useremail: "",
   			discussion: [],
-  			first: false
+  			first: false,
+  			showLastFive: false,
+			last: []
 		};
 		this.getData = this.getData.bind(this)
 		this.start = this.start.bind(this)
 		this.renderDiscussion = this.renderDiscussion.bind(this)
+		this.find = this.find.bind(this);
 		
 
 	}
@@ -76,6 +79,41 @@ class LandingPage extends Component {
   	console.log(this.state.userLogIn);
   }
   
+
+  find(){
+		//user.lastFive
+		Meteor.call("user.lastFive", this.state.useremail, (err, data) => {
+	    	if(err){
+	    		console.log(err)
+	    	}
+	    	console.log("got data", data);
+	    	console.log("got data", data.tracks);
+	    	
+	    	this.setState({
+		    	last: data
+			    	
+	    	})
+	    	console.log(this.state.last)
+
+	    })
+	}
+	showLastFive(){
+		this.find();
+		const pre = this.state.showLastFive;
+		this.setState({
+			showLastFive: !pre
+		})
+
+	}
+	show(){
+		return this.state.last.map(d => 
+  			<div key = {d.toString()}>
+  				
+	  			<h6>{d}</h6>
+			</div>
+		)
+	}
+
   renderDiscussion(){
 
   	return this.state.discussion.map(d => 
@@ -138,6 +176,7 @@ class LandingPage extends Component {
   	const name = "holidays";
   	const isLogIn = this.state.userLogIn;
   	const start = this.state.first;
+  	const show = this.state.showLastFive
     return (
       <div className='landing-container'>
         <div className='landing-title-container' role='main'>
@@ -154,9 +193,21 @@ class LandingPage extends Component {
 				isLogIn
           
 				? 
+				<div>
+				<button aria-label='Get started' className='btn' onClick={this.showLastFive.bind(this)}>Show Activity</button>
+				{
+					show 
 
-			  		<Genre name={name} useremail={this.state.useremail}/>
-          			
+					? 
+					
+					this.show()
+
+					: 
+
+					""
+				}
+			  	<Genre name={name} useremail={this.state.useremail}/>
+          		</div>
 				:
 
 				<div>Database</div>

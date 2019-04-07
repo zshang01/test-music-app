@@ -56,6 +56,15 @@ Meteor.methods({
 		)
 		
 		return user[0];
+	},
+	'user.lastFive': function(email){
+		const user = Users.find({ email: email }).fetch();
+		const res = []
+		for(var i = 0; i < user[0].history.length; i += 1){
+			res.push(user[0].history[i])
+			if(res.length == 5) break;
+		}
+		return res
 	}
 })
 
