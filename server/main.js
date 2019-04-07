@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import "../imports/api/Song.js";
 import "../imports/api/Methods.js";
+import "../imports/api/Users.js";
 
 Meteor.startup(() => {
   // code to run on server at startup  
@@ -18,7 +19,7 @@ Meteor.startup(() => {
       {
         $set: {
           'clientId': '6c4f45baec3f46ee85f42e07cf13836e',
-          'secret': '7002d1c4c3b449d79a4f484bb27ee893'
+          'secret': Meteor.settings.clientSecret
         }
       },
       { upsert: true }

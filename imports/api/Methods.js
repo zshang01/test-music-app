@@ -59,7 +59,7 @@ if(Meteor.isServer){
 	      headers:{
 	        'content-type': 'application/x-www-form-urlencoded',
 	        'Content-Type': 'application/x-www-form-urlencoded',
-	        Authorization: `Basic ${base64.encode(`6c4f45baec3f46ee85f42e07cf13836e:7002d1c4c3b449d79a4f484bb27ee893`)}`
+	        Authorization: `Basic ${base64.encode(`6c4f45baec3f46ee85f42e07cf13836e:${Meteor.settings.clientSecret}`)}`
 	      }
 	    }).then( response => {
 	      Meteor.users.update( { _id: Meteor.user()._id}, { $set : {
@@ -85,7 +85,7 @@ if(Meteor.isServer){
 		    const input = tmp.toString().replace(" ", "\%20");
 		    console.log(input)
 		    return new Promise((resolve, reject) => {
-		    	axios.get(`https://api.spotify.com/v1/search?q=${input}&type=track`, {
+		    	axios.get(`https://api.spotify.com/v1/search?q=${genres1}&type=track`, {
 		      
 			      headers: {
 			        Accept: 'application/json',
@@ -111,5 +111,39 @@ if(Meteor.isServer){
 		        }
 				})
 		  })
-	}})
+	}}),
+	Meteor.methods({
+		"searchSong"(name){
+			const getGenre = "BQDgmYLDK9S_Db5cHri77qaCQYZaEpB7wgsPvi_gnsBNBvkGumyXpG4knD6-jkzQ6BUl9jEuHCgVE-_0SgW4436F5I1MIB1oz_vdAnYtljwjNg67HlT_0x0rGLMgA1nnY92Od75Zxe7-zPpAipjxuEzqgvORyVOLoQgVyTau-N3XMOoal4j270enzKqlj2sJ"
+		    console.log(genres1)
+		    const tmp = genres1.toString().split(" ");
+		    const input = tmp.toString().replace(" ", "\%20");
+		    console.log(input)
+		    return new Promise((resolve, reject) => {
+		    	axios.get(`https://api.spotify.com/v1/search?q=${input}&type=track`, {
+			      headers: {
+			        Accept: 'application/json',
+			        'Content-Type': 'application/json',
+			        Authorization: `Bearer ${Meteor.user().services.spotify.accessToken}}`
+			      }
+		    	})
+		    	.then(response => resolve(response.data) /*Return the requested data*/)
+		      .catch(err => {
+		        //If access token expired, refresh it and try again        
+		        if (err.response.data.error.message === 'The access token expired') {
+		          console.log('Access token expired, refreshing access token...');
+		          Spotify.refreshAccessToken()
+		            //Access token successfully refreshed
+		            .then(new_access_token => Spotify.getTopTracks(new_access_token, type, limit, time_range))
+		            //Successful retry
+		            .then(data => resolve(data))
+		            //Error refreshing or retrying
+		            .catch(err => { console.log('Error retrying to refresh access token'); reject(err); });
+		        }
+		        else {
+		          reject(err);
+		        }
+				})
+		  })
+		}})	
 }

@@ -1,7 +1,8 @@
-
 import React, { Component } from "react";
-
-export default class Search extends Component {
+import Card from './Card.js';
+import { Songs } from '../api/Song.js';
+import { withTracker } from 'meteor/react-meteor-data';
+class Search extends Component {
 
 	constructor(props) {
 	    super(props);
@@ -24,7 +25,10 @@ export default class Search extends Component {
   			tracks: [],
   			value: 'acoustic',
   			found: false,
-  			trackId: null
+  			trackId: null,
+  			input: '',
+  			childvotes: 0,
+  			childcomment: []
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -63,7 +67,8 @@ export default class Search extends Component {
 	    	this.setState({
 		    		//for(var i = 1; i < 11; i+=1){
 			    tracks: data.tracks,
-			    found: true
+			    found: true,
+			    input: this.textInput.value
 			    	//console.log(response.data.tracks[i].name);
 			    //}
 	    	})
@@ -84,6 +89,33 @@ export default class Search extends Component {
 
 	    })
 
+	    Meteor.call("song.exist", this.textInput.value, (err, exist) =>{
+					console.log(exist)
+					if(err) {
+						alert(err);
+					}
+					if(exist){
+						const n = this.textInput.value
+						console.log("song existed");
+						const song = Songs.find({ name: n }).fetch();
+						const name = song[0].name
+						const votes = song[0].votes
+						const comment = song[0].comment
+						
+						this.setState({
+							childvotes: votes,
+							childcomment: comment
+						})	
+						console.log(this.state);
+					}else{
+						this.setState({
+							childvotes: 0,
+							childcomment: []
+						})
+					}
+				}
+			);
+
   	
   	}
 
@@ -92,6 +124,7 @@ export default class Search extends Component {
 	render(){
 		const find = this.state.found;
 		const url = this.state.uri
+		const word = this.state.input
 		return(
 			<div>
 				<form onSubmit={this.handleSubmit}>
@@ -120,7 +153,11 @@ export default class Search extends Component {
 					find 
 					
 					?
-					<div>Click On this URl <a href={this.state.url}>Let's Go</a></div>
+					
+					<div>Click On this URl <a href={this.state.url}>Let's Go</a>
+						<Card name={word} email={this.props.email} votes={this.state.childvotes} comment={this.state.childcomment}/>
+					</div>
+
 					:
 					<div>testing</div>
 				}
@@ -134,3 +171,12 @@ export default class Search extends Component {
 
 
 }
+
+export default withTracker(() => {
+  
+  Meteor.subscribe("Songs");
+  console.log("307")
+  return {
+    song: Songs.find({}).fetch()
+  };
+})(Search);

@@ -1,26 +1,25 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { Button } from 'semantic-ui-react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Songs } from '../api/Song.js'
 import { Users } from '../api/Users.js';
-class Comment extends Component {
+
+class Card extends Component {
 
 
 	constructor(props) {
-    super(props);
+		super(props);
 
-    
-    
-	    this.state = {
-	      name: this.props.name,
-	      votes: 0,
-	      comment: [],
-	      seeCommentOn: false,
-	      load: false,
-	      email: this.props.email
-	    };
-	    this.onClick = this.onClick.bind(this);
+		this.state = {
+			track: [],
+			name: this.props.name,
+			votes: this.props.votes,
+			comment:this.props.comment,
+			email: this.props.email,
+			display: false
+		};
+
+		this.onClick = this.onClick.bind(this);
 	    this.downClick = this.downClick.bind(this);
 	    this.post = this.post.bind(this);
 	    this.seeComments = this.seeComments.bind(this);
@@ -30,10 +29,53 @@ class Comment extends Component {
 	    	this.textInput = element;
 	    };
 	    
-	        
-    }
 
-    onClick(){
+	}
+
+	componentDidMount(){
+		Meteor.call("search", this.props.name, (err, data) => {
+	    	if(err){
+	    		console.log(err)
+	    	}
+	    	console.log("got data", data);
+	    	console.log("got data", data.tracks);
+	    	
+	    	this.setState({
+		    		//for(var i = 1; i < 11; i+=1){
+			    track: data.tracks
+			    	//console.log(response.data.tracks[i].name);
+			    //}
+	    	})
+	    	console.log(this.state.track)
+
+	    })
+		
+
+		Meteor.call("song.exist", this.state.name, (err, exist) =>{
+					console.log(exist)
+					if(err) {
+						alert(err);
+					}
+					if(exist){
+						const n = this.state.name
+						console.log("song existed");
+						const song = Songs.find({ name: n }).fetch();
+						const name = song[0].name
+						const votes = song[0].votes
+						const comment = song[0].comment
+						
+						this.setState({
+							votes: votes,
+							comment: comment
+						})	
+						console.log(this.state);
+					}
+				}
+			);
+	  
+	}
+
+	onClick(){
     	const pre = this.state.votes;
     	this.setState({
     		votes: pre + 1 
@@ -246,14 +288,87 @@ class Comment extends Component {
 			);
      }
 
+	
+				
+	display(){
+		
+		Meteor.call("song.exist", this.props.name, (err, exist) =>{
+					console.log(exist)
+					if(err) {
+						alert(err);
+					}
+					if(exist){
+						const n = this.props.name
+						console.log("song existed");
+						const song = Songs.find({ name: n }).fetch();
+						const name = song[0].name
+						const votes = song[0].votes
+						const comment = song[0].comment
+						
+						this.setState({
+							votes: votes,
+							comment: comment
+						})	
+						console.log(this.state);
+					}else{
+						this.setState({
+							votes: 0,
+							comment: []
+						})	
+					}
+				}
+			);
 
-    render(){
-    	const commentOn = this.state.seeCommentOn;
-    	return(
-    		
-    		<div>
+
+
+
+		Meteor.call("search", this.props.name, (err, data) => {
+	    	if(err){
+	    		console.log(err)
+	    	}
+	    	console.log("got data", data);
+	    	console.log("got data", data.tracks);
+	    	const pre = this.state.display
+	    	this.setState({
+		    	
+			    track: data.tracks,
+				display: !pre
+		
+			    	
+	    	})
+	    	console.log(this.state.track)
+
+	    })
+	}
+				
+
+	
+
+	render(){
+		const display = this.state.display
+		const commentOn = this.state.seeCommentOn;
+		return(
+			<div>
+				<h3>{this.props.name}</h3>
+				<button aria-label='Get started' className='btn' onClick={this.display.bind(this)}>Display Information about this Song</button>
+				{
+					display 
+					
+					? 
+
+					<div>
+					<img src={this.state.track.items[0].album.images[0].url} />
+					<h4>Release Date: {this.state.track.items[0].album.release_date}</h4>
+					<h4>Popularity: {this.state.track.items[0].popularity}</h4>
+					</div>
+					:	
+
+					""
+				}
+				
+				
     			
-    			<h1>{this.props.name}</h1>
+    			<h1>{this.state.name}</h1>
     			<h2>{this.state.votes} </h2>
 	    		<button className="btn btn-info ml-3" onClick={this.onClick}>
 		          <span role="img" aria-label="like for this song">
@@ -301,8 +416,9 @@ class Comment extends Component {
 		        
 
 			</div>
-    	);
-    }
+
+		)
+	}
 }
 export default withTracker(() => {
   Meteor.subscribe("Users");
@@ -312,4 +428,4 @@ export default withTracker(() => {
     user: Users.find({}).fetch(),
     song: Songs.find({}).fetch()
   };
-})(Comment);
+})(Card);

@@ -19,5 +19,6 @@ autopublish@1.0.7             # Publish all data to the clients (for prototyping
 static-html             # Define static page content in .html files
 react-meteor-data       # React higher-order component for reactively tracking Meteor data
 xinranxiao:accounts-spotify
-
 xinranxiao:spotify
+accounts-ui
+accounts-password
