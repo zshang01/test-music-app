@@ -127,6 +127,7 @@ class Search extends Component {
 		const word = this.state.input
 		return(
 			<div>
+				<h1>Search Bar</h1>
 				<form onSubmit={this.handleSubmit}>
 					<label>
 					<select value={this.state.value} onChange={this.handleChange}>

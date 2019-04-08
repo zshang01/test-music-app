@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.4",
+    "@material-ui/core": "^3.9.3",
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
+    "material-ui": "^1.0.0-beta.47",
     "meteor-node-stubs": "^0.4.1",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",

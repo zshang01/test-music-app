@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import Login from './Login.js';
+import Login from './Login.jsx';
 import { withTracker } from 'meteor/react-meteor-data';
 import Genre from './Genre.js';
-import { Songs } from '../api/Song.js'
+import { Songs } from '../api/Song.js';
+import Grid from '@material-ui/core/Grid';
 class LandingPage extends Component {
 
   constructor(props) {
@@ -108,7 +109,7 @@ class LandingPage extends Component {
 	show(){
 		return this.state.last.map(d => 
   			<div key = {d.toString()}>
-  				
+
 	  			<h6>{d}</h6>
 			</div>
 		)
@@ -180,15 +181,22 @@ class LandingPage extends Component {
     return (
       <div className='landing-container'>
         <div className='landing-title-container' role='main'>
-          <Login sendData={this.getData} />
-          <h1>hello landing</h1>
-		  <button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>Most Top Ten Likes🔥</button>
-		  <button aria-label='Get started' className='btn' onClick={this.sortByComment.bind(this)}>Most Top Ten Comments🔥</button>
-          {
-				this.renderDiscussion()
-          }
-          
-          <div position="right">
+          <Grid container spacing={24}>
+          <Grid item xs={6}>
+          	
+	          <Login sendData={this.getData} />
+	          
+			  <button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>Most Top Ten Likes🔥</button>
+			  <button aria-label='Get started' className='btn' onClick={this.sortByComment.bind(this)}>Most Top Ten Comments🔥</button>
+	          {
+					this.renderDiscussion()
+	          }
+	        
+          </Grid>
+		
+          <Grid item xs={6}>
+          	
+          	<div position="right">
           	{
 				isLogIn
           
@@ -210,12 +218,12 @@ class LandingPage extends Component {
           		</div>
 				:
 
-				<div>Database</div>
+				<div></div>
           	}
-			
+          	</div>
+		  </Grid>
+		  </Grid>
           </div>
-          
-        </div>
       </div>
     );
   }

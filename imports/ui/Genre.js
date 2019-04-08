@@ -87,15 +87,18 @@ export default class Genre extends Component {
 
 		return(
 			<div>
-				<h1>{this.props.name}</h1>
-				
-					<Search email={this.state.email}/>
+				<Search email={this.state.email}/>
+				<br/>
+				<h1>Recommended Genre base on you profile: {this.props.name}</h1>
+					<button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>sortByName</button>
+					<button aria-label='Get started' className='btn' onClick={this.sortByComments.bind(this)}>sortByName2</button>
+					<br/>
+					<br/>
 					
 					{this.renderSong()}
 
 
-				<button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>sortByName</button>
-				<button aria-label='Get started' className='btn' onClick={this.sortByComments.bind(this)}>sortByName2</button>
+				
 				
 				
 			</div>

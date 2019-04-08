@@ -14,10 +14,17 @@ export default class App extends Component {
 	constructor(props) {
     	super(props);
     	this.state = {
-	    	loading: false
+	    	loading: false,
+	    	time: Date.now()
 	    };
+	    this.redirect = this.redirect.bind(this);
 	}
 
+	// componentDidMount() {
+ //      setInterval(() => this.setState({ time: Date.now()}), 1000)
+ // 	}
+
+ // 	componentWillUnmount() { clearInterval(this.interval); }
 	signIn() {
 	    var options = {
 	      showDialog: true, // Whether or not to force the user to approve the app again if they’ve already done so.
@@ -36,10 +43,26 @@ export default class App extends Component {
   			loading: !pre
   		})
   	}
+  	handle(event){
+  		event.preventDefault();
+  		this.props.setTimeout(this.onClick, 3000);
+  	}
 
   	handleClick(){
   		this.signIn();
   		this.onClick();
+  	}
+  	redirect(event){
+
+		event.preventDefault();
+		console.log("wait")
+		if(!this.state.loading){
+			setTimeout(function(){
+				this.setState({
+					loading: true
+				})
+			}.bind(this), 3000);
+		}
   	}
 	render(){
 		const load = this.state.loading;
@@ -58,9 +81,12 @@ export default class App extends Component {
 						<LandingPage />
 
 						:
-
+						<div>
 						<HomePage />
+						<button aria-label='Get started' className='btn' onClick={() => this.handleClick()}>Agree</button>
+						</div>
 					}
+
 					
 					
 						
@@ -69,7 +95,7 @@ export default class App extends Component {
 				
 					<Footer />
 					<br />
-					<button aria-label='Get started' className='btn' onClick={() => this.handleClick()}>Display</button>
+					
 				</Container>
 			</div>
 		)

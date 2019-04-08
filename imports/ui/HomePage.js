@@ -10,18 +10,19 @@ export default class HomePage extends React.Component {
 	render() {
 		return (
 			<div id="homapage">
-				
+				<h1>Welcome to Music Chill!</h1>
 				<p id="introduction">
-					Welcome to Music Chill! <br />Do you have the feeling 
+					Do you have the feeling 
 					that you really like a song but have no one 
 					to communicate or disscuss with? <br />
 					Trust Me! You are at the right place. 
 					<br/><br/>
 					
 				</p> <br/>
-				<Image src="/background.png" fluid /><br/>
-
 				
+				<Image src="/background.png" fluid /><br/>	
+				<h2>Acknowleagement:</h2>
+				<p> This Webpage may access to your spotify account</p>		
 			</div>
 		);
 	}
