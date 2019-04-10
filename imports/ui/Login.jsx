@@ -14,7 +14,8 @@ class Login extends Component {
 		this.state = {
 			err: "",
 			toggle: false,
-			email: ""
+			email: "",
+			success: false
 		};
 		this.send = this.send.bind(this);
 		
@@ -23,19 +24,37 @@ class Login extends Component {
 		
 	}
 	onLogin(){
-		const username = document.querySelector("#name").value.trim();
+		const email = document.querySelector("#email").value.trim();
 		const password = document.querySelector("#password").value.trim();
-
-		Meteor.loginWithPassword({ username: username }, password, err => {
-			if (err) {
-				this.setState({
-					error: "Cannot Log in"
-				});
-			} else {
-				this.setState({ error: "" });
-				this.Success();
+		console.log("28 in login js")
+		
+		const param = {
+			email: email,
+			password: password
+		}
+		Meteor.call("user.login", param, (err, user) =>{
+			
+			if(err){
+				alert(err)
 			}
-		});
+			console.log(user);
+			if(user.success){
+				const email = user.email
+				this.Success();
+				this.setState({
+					email: email,
+					success: true
+				})
+				
+				this.send();
+				console.log("add!")
+				
+			}else{
+				alert("try again")
+			}
+
+		})
+		console.log("40 in login js")
 
 	}
 	onRegister(){
@@ -43,11 +62,7 @@ class Login extends Component {
 		const username = document.querySelector("#name").value.trim();
 		const email = document.querySelector("#email").value.trim();
 		const password = document.querySelector("#password").value.trim();
-		// if (password.length < 8) {
-		// 	return this.setState({
-		// 		error: "Password must be more than 8 characters."
-		// 	});
-		// }
+		
 			console.log(username)
 			console.log(email)
 			console.log(password)
@@ -68,7 +83,8 @@ class Login extends Component {
 						});
 						this.Success();
 						this.setState({
-							email: email
+							email: email,
+							success: true
 						})
 						this.send();
 						console.log("add!")
@@ -76,32 +92,10 @@ class Login extends Component {
 					}
 				}
 			);
-		// Accounts.createUser(
-		// 	{
-		// 		username: username,
-		// 		email: email,
-		// 		password: password
-		// 	},
-		// 	err => {
-		// 		if (err) {
-				// 	this.setState({
-				// 		error: "cannot create User"
-				// 	});
-				// } else {
-				// 	this.setState({
-				// 		error: ""
-				// 	});
-				// 	this.Success();
-
-					
-		// 		}
-		// 	}
-		// );
-		// create user in the database
-
-
-	}
+		}
+		
 	send(){
+		console.log(this.state.email)
 		this.props.sendData(this.state.email);
 	}
 	Success() {
@@ -120,19 +114,40 @@ class Login extends Component {
 		})
 	}
 	
+	logout(){
+		this.setState({
+			email: "",
+			success: false
+		})
+	}
 
 	render() {
-		
+		let login = this.state.success
+		let useremail = this.state.email
 		return (
 			<div>
 				<div>
-					<button className="float-right" onClick={this.toggleShow.bind(this)}>Log In / Sign Up</button>
+					<button className="float-right" onClick={this.toggleShow.bind(this)}>{ login 
+
+						? 
+						 <div></div>
+						 : <div>Log In / Sign Up</div>}</button>
 				</div>
+				
+				<div>
+					{
+						login ?
+						<button className='float-right' onClick={this.logout.bind(this)}> Log Out? </button> :
+						<div></div>
+					}
+					
+				</div>
+	
 			<div id="account">
 				
 					
 				
-				<Grid.Row columns={2}>
+				
 					<ReactModalLogin
 					
 					visible={this.state.toggle}
@@ -152,11 +167,11 @@ class Login extends Component {
 						loginInputs: [
 							{
 								
-								label: "Username",
-								type: "text",
-								id: "name",
-								name: "username",
-								placeholder: "Username"
+								label: "email",
+								type: "email",
+								id: "email",
+								name: "email",
+								placeholder: "email"
 							},
 							{
 								
@@ -192,7 +207,7 @@ class Login extends Component {
 						]
 						}}
 					/>
-				</Grid.Row>
+				
 
 			</div>
 			</div>

@@ -20,7 +20,7 @@ export default class HomePage extends React.Component {
 					
 				</p> <br/>
 				
-				<Image src="/background.png" fluid /><br/>	
+				<Image src="/background.png" alt="background" /><br/>	
 				<h2>Acknowleagement:</h2>
 				<p> This Webpage may access to your spotify account</p>		
 			</div>

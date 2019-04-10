@@ -28,6 +28,36 @@ Meteor.methods({
 		
 		return user[0];
 	},
+	'user.login': function(param){
+
+		const email = param.email
+		const password = param.password
+		const res = Users.find({ email: email }).fetch();
+		if(res.length > 0){
+			let found = false;
+			
+			
+			console.log(res);
+			console.log(res[0].email);
+			console.log(res[0].email === email);
+			if(res[0].email == email && password == res[0].password){
+				found = true;
+			}
+			if(found){
+				const user = {
+					success: found,
+					email: res[0].email
+				}
+				return user;
+			}
+		}
+		
+		return {
+			success: false,
+			email: ""
+		}
+		
+	},
 	'user.comment': function(param){
 		console.log("server side")
 		const email = param.email

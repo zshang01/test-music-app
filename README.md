@@ -29,11 +29,14 @@ $ meteor
 -   [Link](https://test-music-app.herokuapp.com/)
 -   [Video](https://www.youtube.com/watch?v=Ppjuo5q_tng&t=2s)
 
-## License
 
-This project is licensed under the MIT License - please see the [LICENSE](LICENSE)
 
 ## Authors
 
 -   Zhou Shang
 -   Megan
+
+
+## License
+
+This project is licensed under the MIT License - please see the [LICENSE](LICENSE)

@@ -72,9 +72,10 @@ class LandingPage extends Component {
   }
   getData(val){
   	const pre = this.state.userLogIn;
+  	console.log(val)
   	this.setState({
   		useremail: val,
-  		userLogIn: !pre
+  		userLogIn: true
   	})
   	console.log(this.state.useremail);
   	console.log(this.state.userLogIn);
