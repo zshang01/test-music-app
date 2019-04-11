@@ -5,6 +5,8 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Genre from './Genre.js';
 import { Songs } from '../api/Song.js';
 import Grid from '@material-ui/core/Grid';
+import PropTypes from "prop-types";
+import { Users } from '../api/Users.js';
 class LandingPage extends Component {
 
   constructor(props) {
@@ -28,20 +30,25 @@ class LandingPage extends Component {
   			tracks:[],
   			userLogIn: false,
   			useremail: "",
-  			discussion: [],
+  			discussion: this.props.song,
   			first: false,
   			showLastFive: false,
-			last: []
+			last: [],
+			default: true,
+			sortLike: false,
+			sortComment: false
 		};
 		this.getData = this.getData.bind(this)
 		this.start = this.start.bind(this)
 		this.renderDiscussion = this.renderDiscussion.bind(this)
-		this.find = this.find.bind(this);
-		
+		this.renderDiscussionByVotes = this.renderDiscussionByVotes.bind(this)
+		this.renderDiscussionByComment = this.renderDiscussionByComment.bind(this)
+		this.show = this.show.bind(this)
 
 	}
 
 	componentDidMount(){
+		
 		Meteor.call("song.display", (err, songs) =>{
 				console.log(songs)
 				if(err) {
@@ -56,6 +63,7 @@ class LandingPage extends Component {
 			}
 		);
 		console.log(this.state.discussion)
+		
 	}
 
 	  handler() {
@@ -82,33 +90,35 @@ class LandingPage extends Component {
   }
   
 
-  find(){
-		//user.lastFive
-		Meteor.call("user.lastFive", this.state.useremail, (err, data) => {
-	    	if(err){
-	    		console.log(err)
-	    	}
-	    	console.log("got data", data);
-	    	console.log("got data", data.tracks);
+ //  find(){
+	// 	//user.lastFive
+	// 	Meteor.call("user.lastFive", this.state.useremail, (err, data) => {
+	//     	if(err){
+	//     		console.log(err)
+	//     	}
+	//     	console.log("got data", data);
 	    	
-	    	this.setState({
-		    	last: data
+	    	
+	//     	this.setState({
+	// 	    	last: data
 			    	
-	    	})
-	    	console.log(this.state.last)
+	//     	})
+	//     	console.log(this.state.last)
 
-	    })
-	}
+	//     })
+	// }
 	showLastFive(){
-		this.find();
+		
 		const pre = this.state.showLastFive;
 		this.setState({
 			showLastFive: !pre
 		})
+		console.log(this.props.user);
+		console.log(this.state.useremail);
 
 	}
 	show(){
-		return this.state.last.map(d => 
+		return this.props.user.find( u => {return u.email === this.state.useremail }).history.slice(-5).map(d => 
   			<div key = {d.toString()}>
 
 	  			<h6>{d}</h6>
@@ -116,9 +126,43 @@ class LandingPage extends Component {
 		)
 	}
 
-  renderDiscussion(){
+  renderDiscussionByVotes(){
 
-  	return this.state.discussion.map(d => 
+
+	return this.props.song.sort((a,b) => (b.votes - a.votes)).map(d => 
+  			<div key = {d._id}>
+	  			<h4>Song Name: { d.name }</h4>
+	  			<h4>🔥: { d.votes }</h4>
+	  			<div>
+	  				{d.comment.map( c => 
+	  					<li key={c.toString()}>
+	  						{c}
+	  					</li>
+	  				)}
+	  			</div>
+
+			</div>
+	)
+  }
+
+  renderDiscussionByComment(){	
+  	return this.props.song.sort((a,b) => (b.num - a.num)).map(d => 
+  			<div key = {d._id}>
+	  			<h4>Song Name: { d.name }</h4>
+	  			<h4>🔥: { d.votes }</h4>
+	  			<div>
+	  				{d.comment.map( c => 
+	  					<li key={c.toString()}>
+	  						{c}
+	  					</li>
+	  				)}
+	  			</div>
+
+			</div>
+	)
+  }
+  renderDiscussion(){
+  	  	return this.props.song.map(d => 
   			<div key = {d._id}>
 	  			<h4>Song Name: { d.name }</h4>
 	  			<h4>🔥: { d.votes }</h4>
@@ -136,49 +180,38 @@ class LandingPage extends Component {
 
 
 
-  renderDiscussionByLike(){
-
-  }
-
-  renderDiscussionByComment(){
-
-  }
+  
 
   sortByLike(){
-	Meteor.call("song.sortLike", (err, songs) =>{
-			console.log(songs)
-			if(err) {
-				alert(err);
-			}
-			if(songs){
-				this.setState({
-					discussion: songs
-				})
-				
-			}
-		}
-	);
+	const pre = this.state.sortLike
+	const pre1 = this.state.sortComment
+	this.setState({
+		sortLike: true,
+		sortComment: false
+	})
   }
   sortByComment(){
-	Meteor.call("song.sortComment", (err, songs) =>{
-			console.log(songs)
-			if(err) {
-				alert(err);
-			}
-			if(songs){
-				this.setState({
-					discussion: songs
-				})
-				
-			}
-		}
-	);
+	const pre = this.state.sortComment
+	this.setState({
+		sortComment: true,
+		sortLike: false
+	})
   }
+
+  logout(){
+  		const pre = this.state.userLogIn
+		this.setState({
+			userLogIn: !pre
+		})
+	}
   render() {
   	const name = "holidays";
   	const isLogIn = this.state.userLogIn;
   	const start = this.state.first;
-  	const show = this.state.showLastFive
+  	const show = this.state.showLastFive;
+  	const de = this.state.default
+  	const sortLike = this.state.sortLike
+  	const sortComment = this.state.sortComment
     return (
       <div className='landing-container'>
         <div className='landing-title-container' role='main'>
@@ -190,7 +223,23 @@ class LandingPage extends Component {
 			  <button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>Most Top Ten Likes🔥</button>
 			  <button aria-label='Get started' className='btn' onClick={this.sortByComment.bind(this)}>Most Top Ten Comments🔥</button>
 	          {
-					this.renderDiscussion()
+					sortLike 
+					
+					?
+						this.renderDiscussionByVotes()
+					: 
+					(
+						sortComment
+
+						? 
+						
+						this.renderDiscussionByComment()
+
+						: 
+
+						this.renderDiscussion()
+					)
+					
 	          }
 	        
           </Grid>
@@ -203,6 +252,7 @@ class LandingPage extends Component {
           
 				? 
 				<div>
+				<button className='float-right' onClick={this.logout.bind(this)}> Log Out? </button> :
 				<button aria-label='Get started' className='btn' onClick={this.showLastFive.bind(this)}>Show Activity</button>
 				{
 					show 
@@ -230,11 +280,15 @@ class LandingPage extends Component {
   }
 }
 
+
+
 export default withTracker(() => {
   Meteor.subscribe("Songs");
+  Meteor.subscribe("Users");
   console.log("307")
   return {
-    song: Songs.find({}).fetch()
+    song: Songs.find({}).fetch(),
+    user: Users.find({}).fetch()
   };
 })(LandingPage);
 

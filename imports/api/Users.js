@@ -1,6 +1,4 @@
 
-
-
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import { check } from "meteor/check";
@@ -74,13 +72,13 @@ Meteor.methods({
 		const pre = user[0].history;
 		
 		pre.push(name);
-
+		const unique = Array.from(new Set(pre))
 		
 		Users.update(
 			{ _id: user[0]._id },
 			{
-				$push: {
-					 history: name
+				$set: {
+					 history: unique
 				}
 			}	
 		)

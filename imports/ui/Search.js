@@ -160,7 +160,7 @@ class Search extends Component {
 					</div>
 
 					:
-					<div>testing</div>
+					<div></div>
 				}
 
 			</div>

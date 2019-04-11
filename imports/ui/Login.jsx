@@ -114,12 +114,7 @@ class Login extends Component {
 		})
 	}
 	
-	logout(){
-		this.setState({
-			email: "",
-			success: false
-		})
-	}
+	
 
 	render() {
 		let login = this.state.success
@@ -134,14 +129,7 @@ class Login extends Component {
 						 : <div>Log In / Sign Up</div>}</button>
 				</div>
 				
-				<div>
-					{
-						login ?
-						<button className='float-right' onClick={this.logout.bind(this)}> Log Out? </button> :
-						<div></div>
-					}
-					
-				</div>
+				
 	
 			<div id="account">
 				
