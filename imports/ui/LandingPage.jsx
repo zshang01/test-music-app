@@ -90,23 +90,6 @@ class LandingPage extends Component {
   }
   
 
- //  find(){
-	// 	//user.lastFive
-	// 	Meteor.call("user.lastFive", this.state.useremail, (err, data) => {
-	//     	if(err){
-	//     		console.log(err)
-	//     	}
-	//     	console.log("got data", data);
-	    	
-	    	
-	//     	this.setState({
-	// 	    	last: data
-			    	
-	//     	})
-	//     	console.log(this.state.last)
-
-	//     })
-	// }
 	showLastFive(){
 		
 		const pre = this.state.showLastFive;
@@ -119,9 +102,10 @@ class LandingPage extends Component {
 	}
 	show(){
 		return this.props.user.find( u => {return u.email === this.state.useremail }).history.slice(-5).map(d => 
-  			<div key = {d.toString()}>
-
-	  			<h6>{d}</h6>
+  			<div key = {d.toString()} role="list">
+  				<div role="listitem">
+  				<h6>{d}</h6>
+				</div>
 			</div>
 		)
 	}
@@ -131,14 +115,18 @@ class LandingPage extends Component {
 
 	return this.props.song.sort((a,b) => (b.votes - a.votes)).map(d => 
   			<div key = {d._id}>
-	  			<h4>Song Name: { d.name }</h4>
-	  			<h4>🔥: { d.votes }</h4>
-	  			<div>
+	  			<h2>Song Name: { d.name }</h2>
+	  			<h2>🔥: { d.votes }</h2>
+	  			<div role="list">
+	  				<div role="listitem">
 	  				{d.comment.map( c => 
+	  					<div role="list">
 	  					<li key={c.toString()}>
 	  						{c}
 	  					</li>
+	  					</div>
 	  				)}
+	  				</div>
 	  			</div>
 
 			</div>
@@ -148,14 +136,18 @@ class LandingPage extends Component {
   renderDiscussionByComment(){	
   	return this.props.song.sort((a,b) => (b.num - a.num)).map(d => 
   			<div key = {d._id}>
-	  			<h4>Song Name: { d.name }</h4>
-	  			<h4>🔥: { d.votes }</h4>
-	  			<div>
+	  			<h2>Song Name: { d.name }</h2>
+	  			<h2>🔥: { d.votes }</h2>
+	  			<div role="list">
+					<div role="listitem">
 	  				{d.comment.map( c => 
+	  					<div role="list">
 	  					<li key={c.toString()}>
 	  						{c}
 	  					</li>
+	  					</div>
 	  				)}
+	  				</div>
 	  			</div>
 
 			</div>
@@ -164,14 +156,18 @@ class LandingPage extends Component {
   renderDiscussion(){
   	  	return this.props.song.map(d => 
   			<div key = {d._id}>
-	  			<h4>Song Name: { d.name }</h4>
-	  			<h4>🔥: { d.votes }</h4>
-	  			<div>
+	  			<h2>Song Name: { d.name }</h2>
+	  			<h2>🔥: { d.votes }</h2>
+	  			<div role="list">
+	  				<div role="listitem">
 	  				{d.comment.map( c => 
+	  					<div role="list">
 	  					<li key={c.toString()}>
 	  						{c}
 	  					</li>
+	  					</div>
 	  				)}
+	  				</div>
 	  			</div>
 
 			</div>
@@ -218,10 +214,11 @@ class LandingPage extends Component {
           <Grid container spacing={24}>
           <Grid item xs={6}>
           	
-	          <Login sendData={this.getData} />
+	          <Login sendData={this.getData} isLogIn={this.state.userLogIn}/>
 	          
 			  <button aria-label='Get started' className='btn' onClick={this.sortByLike.bind(this)}>Most Top Ten Likes🔥</button>
 			  <button aria-label='Get started' className='btn' onClick={this.sortByComment.bind(this)}>Most Top Ten Comments🔥</button>
+	          <h1>Latest Discussion</h1>
 	          {
 					sortLike 
 					

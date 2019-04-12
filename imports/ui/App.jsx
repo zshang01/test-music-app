@@ -20,11 +20,6 @@ export default class App extends Component {
 	    this.redirect = this.redirect.bind(this);
 	}
 
-	// componentDidMount() {
- //      setInterval(() => this.setState({ time: Date.now()}), 1000)
- // 	}
-
- // 	componentWillUnmount() { clearInterval(this.interval); }
 	signIn() {
 	    var options = {
 	      showDialog: true, // Whether or not to force the user to approve the app again if they’ve already done so.
@@ -81,16 +76,13 @@ export default class App extends Component {
 						<LandingPage />
 
 						:
-						<div>
+						<div role="main">
 						<HomePage />
 						<button aria-label='Get started' className='btn' onClick={() => this.handleClick()}>Agree</button>
 						</div>
 					}
 
 					
-					
-						
-
 					<br />
 				
 					<Footer />

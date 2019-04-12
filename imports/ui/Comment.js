@@ -93,8 +93,6 @@ class Comment extends Component {
 					}
 				}
 			);
-	  
-    	
     	
     }
     
@@ -173,9 +171,11 @@ class Comment extends Component {
     showComments(){
     	
 		return this.state.comment.map(c => 
+			<ul>
 			<li key={c.toString()}>
 			    {c}
 			</li>
+			</ul>
 			)
 							
     }
@@ -242,8 +242,14 @@ class Comment extends Component {
 							}
 						);
 					}
+					document.getElementById('comment').value=''
 				}
+				
+
 			);
+
+
+		
      }
 
 
@@ -270,22 +276,26 @@ class Comment extends Component {
 		        
 		        <div className="input-group">
 		          <span className="input-group-addon">Comment</span>
-
+	
+				  
 		          <input
+					aria-label="comment"
 	                name="comment"
 	                type="text"
 	                ref={this.setText}
 	                className="form-control col mr-3"
-	                id="comment"
+	                
+	                
 	              />
+
 		          <button className="btn btn-info" onClick={this.post}>
-			          <span role="img" aria-label="dislike for this song">
+			          <span role="img" aria-label="post comment">
 			          	Post
 			          </span>
 			        </button>
 		          
 		          	<button className="btn btn-info" onClick={this.seeComments}>
-			          <span role="img" aria-label="dislike for this song">
+			          <span role="img" aria-label="see comments">
 			          	See comments
 			          </span>
 			        </button>

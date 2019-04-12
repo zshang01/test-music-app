@@ -143,7 +143,7 @@ class Search extends Component {
 		                type="text"
 		                ref={this.setText}
 		                className="form-control col mr-3"
-		                id="comment"
+		                id="searchcomment"
 		              />
 		            <input type="submit" value="Submit" />
 					</label>

@@ -9,8 +9,8 @@ export default class HomePage extends React.Component {
 	
 	render() {
 		return (
-			<div id="homapage">
-				<h1>Welcome to Music Chill!</h1>
+			<div id="homapage" role="form">
+				<h1 >Welcome to Music Chill!</h1>
 				<p id="introduction">
 					Do you have the feeling 
 					that you really like a song but have no one 

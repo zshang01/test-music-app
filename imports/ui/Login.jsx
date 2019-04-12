@@ -15,7 +15,7 @@ class Login extends Component {
 			err: "",
 			toggle: false,
 			email: "",
-			success: false
+			success: this.props.isLogIn
 		};
 		this.send = this.send.bind(this);
 		
@@ -117,87 +117,96 @@ class Login extends Component {
 	
 
 	render() {
-		let login = this.state.success
+		let login = this.props.isLogIn
 		let useremail = this.state.email
 		return (
 			<div>
 				<div>
-					<button className="float-right" onClick={this.toggleShow.bind(this)}>{ login 
+					{ login 
 
 						? 
 						 <div></div>
-						 : <div>Log In / Sign Up</div>}</button>
+						 : <button className="float-right" onClick={this.toggleShow.bind(this)}><div>Log In / Sign Up</div></button>}
 				</div>
 				
-				
-	
-			<div id="account">
-				
-					
-				
-				
-					<ReactModalLogin
-					
-					visible={this.state.toggle}
-					onCloseModal={this.close.bind(this)}
+				<div>
+				{
 
-					form={{
+				login
+
+				? 
+				
+				<div></div>
+
+				:
+
+				<div id="account">
+					
+						<ReactModalLogin
 						
-						onRegister: this.onRegister.bind(this),
-						onLogin: this.onLogin.bind(this),
-						loginBtn: {
-							label: "Log In"
-						},
-						registerBtn: {
-							label: "Sign Up"
-						},
+						visible={this.state.toggle}
+						onCloseModal={this.close.bind(this)}
 
-						loginInputs: [
-							{
-								
-								label: "email",
-								type: "email",
-								id: "email",
-								name: "email",
-								placeholder: "email"
+						form={{
+							
+							onRegister: this.onRegister.bind(this),
+							onLogin: this.onLogin.bind(this),
+							loginBtn: {
+								label: "Log In"
 							},
-							{
-								
-								label: "Password",
-								type: "password",
-								id: "password",
-								name: "password",
-								placeholder: "Password"
-							}
-						],
-						registerInputs: [
-							{
-								label: "Username",
-								type: "text",
-								id: "name",
-								name: "username",
-								placeholder: "Username"
+							registerBtn: {
+								label: "Sign Up"
 							},
-							{
-								label: "Email",
-								type: "email",
-								id: "email",
-								name: "email",
-								placeholder: "Email"
-							},
-							{
-								label: "Password",
-								type: "password",
-								id: "password",
-								name: "password",
-								placeholder: "Password"
-							}
-						]
-						}}
-					/>
-				
 
-			</div>
+							loginInputs: [
+								{
+									
+									label: "email",
+									type: "email",
+									id: "email",
+									name: "email",
+									placeholder: "email"
+								},
+								{
+									
+									label: "Password",
+									type: "password",
+									id: "password",
+									name: "password",
+									placeholder: "Password"
+								}
+							],
+							registerInputs: [
+								{
+									label: "Username",
+									type: "text",
+									id: "name",
+									name: "username",
+									placeholder: "Username"
+								},
+								{
+									label: "Email",
+									type: "email",
+									id: "email",
+									name: "email",
+									placeholder: "Email"
+								},
+								{
+									label: "Password",
+									type: "password",
+									id: "password",
+									name: "password",
+									placeholder: "Password"
+								}
+							]
+							}}
+						/>
+
+					</div>
+					}
+				</div>
+			
+			
 			</div>
 		);
 	}
