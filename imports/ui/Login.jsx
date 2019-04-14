@@ -26,7 +26,7 @@ class Login extends Component {
 	onLogin(){
 		const email = document.querySelector("#email").value.trim();
 		const password = document.querySelector("#password").value.trim();
-		console.log("28 in login js")
+		console.log("28 in login js") //maybe remove the console.log
 		
 		const param = {
 			email: email,
@@ -54,7 +54,7 @@ class Login extends Component {
 			}
 
 		})
-		console.log("40 in login js")
+		console.log("40 in login js") //maybe remove the console.log
 
 	}
 	onRegister(){
