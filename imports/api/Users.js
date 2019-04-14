@@ -35,7 +35,7 @@ Meteor.methods({
 			let found = false;
 			
 			
-			console.log(res);
+			console.log(res); //maybe remove the console.log
 			console.log(res[0].email);
 			console.log(res[0].email === email);
 			if(res[0].email == email && password == res[0].password){
@@ -57,7 +57,7 @@ Meteor.methods({
 		
 	},
 	'user.comment': function(param){
-		console.log("server side")
+		console.log("server side") //maybe remove the console.log
 		const email = param.email
 		
 		const name = param.name
