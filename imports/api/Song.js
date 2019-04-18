@@ -14,9 +14,9 @@ Meteor.methods({
 		// check(username, String)
 		// check(email, String)
 		// check(password, String)
-		console.log(param.name)
-		console.log(param.votes)
-		console.log(param.comment)
+		console.log(param.name) //maybe remove the console.log
+		console.log(param.votes) //maybe remove the console.log
+		console.log(param.comment) //maybe remove the console.log
 		Songs.insert({
 			createAt: Date.now(),
 			name: param.name,
@@ -37,7 +37,7 @@ Meteor.methods({
 		return false;
 	},
 	'song.update': function(param){
-		console.log(param);
+		console.log(param); //maybe remove the console.log
 		const name = param.name
 		const votes = param.votes
 		const comment = param.comment

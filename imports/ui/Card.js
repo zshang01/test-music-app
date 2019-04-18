@@ -37,7 +37,7 @@ class Card extends Component {
 	    	if(err){
 	    		console.log(err)
 	    	}
-	    	console.log("got data", data);
+	    	console.log("got data", data); //maybe remove the console.log
 	    	console.log("got data", data.tracks);
 	    	
 	    	this.setState({
